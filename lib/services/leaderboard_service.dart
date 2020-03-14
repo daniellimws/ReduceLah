@@ -1,9 +1,10 @@
 class User {
+  int id;
   String name;
   int points;
   int rank;
 
-  User({this.name, this.points, this.rank});
+  User({this.id, this.name, this.points, this.rank});
 }
 
 class LeaderboardData {
