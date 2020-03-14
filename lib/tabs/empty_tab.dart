@@ -16,7 +16,11 @@ class _EmptyTabState extends State<EmptyTab>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Empty', style: TextStyle(color: Colors.black)),
+        title: Text(
+          'Empty',
+          style: TextStyle(
+              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+        ),
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
