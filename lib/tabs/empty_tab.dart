@@ -5,8 +5,7 @@ class EmptyTab extends StatefulWidget {
   _EmptyTabState createState() => _EmptyTabState();
 }
 
-class _EmptyTabState extends State<EmptyTab>
-    with AutomaticKeepAliveClientMixin<EmptyTab> {
+class _EmptyTabState extends State<EmptyTab> {
   @override
   void initState() {
     super.initState();
@@ -32,7 +31,4 @@ class _EmptyTabState extends State<EmptyTab>
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

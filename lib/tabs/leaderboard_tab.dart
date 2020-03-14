@@ -18,8 +18,7 @@ class LeaderboardTab extends StatefulWidget {
   _LeaderboardTabState createState() => _LeaderboardTabState();
 }
 
-class _LeaderboardTabState extends State<LeaderboardTab>
-    with AutomaticKeepAliveClientMixin<LeaderboardTab> {
+class _LeaderboardTabState extends State<LeaderboardTab> {
   @override
   void initState() {
     super.initState();
@@ -93,7 +92,4 @@ class _LeaderboardTabState extends State<LeaderboardTab>
           ),
         ));
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

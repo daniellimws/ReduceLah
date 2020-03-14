@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
 
 import 'tabs/leaderboard_tab.dart';
 import 'tabs/empty_tab.dart';
@@ -17,6 +19,7 @@ class _TabContainerState extends State<TabContainer> {
   List<int> listScreensIndex;
 
   int tabIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +32,10 @@ class _TabContainerState extends State<TabContainer> {
 
   @override
   Widget build(BuildContext context) {
+    FlutterNfcReader.onTagDiscovered().listen((onData) {
+      Navigator.of(context).pushNamed("/nfc");
+    });
+
     return MaterialApp(
       color: Colors.greenAccent,
       home: Scaffold(
