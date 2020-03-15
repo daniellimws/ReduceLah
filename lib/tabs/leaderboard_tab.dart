@@ -27,6 +27,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF6FBF5),
       appBar: AppBar(
         title: Text(
           'Leaderboard',

@@ -15,8 +15,8 @@ class _NFCDetectedPageState extends State<NFCDetectedPage>
   void initState() {
     super.initState();
 
-    _fadeController =
-        AnimationController(vsync: this, duration: Duration(seconds: 1));
+    _fadeController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 1000));
     _fadeAnimation = Tween(begin: 0.0, end: 1.0).animate(_fadeController);
   }
 
@@ -30,33 +30,45 @@ class _NFCDetectedPageState extends State<NFCDetectedPage>
   Widget build(BuildContext context) {
     _fadeController.forward();
     return Scaffold(
+      backgroundColor: Color(0xFFF4FAF3),
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                width: 200,
-                height: 200,
-                child: FlareActor('assets/animations/Earth.flr',
-                    color: Colors.green,
-                    alignment: Alignment.center,
-                    fit: BoxFit.contain,
-                    animation: 'Stroke'),
-              ),
-              FadeTransition(
-                opacity: _fadeAnimation,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'You refused to use a plastic bag!\n\nThanks for making the world a better place!',
-                    style: TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: Container(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: 200,
+                    height: 200,
+                    child: FlareActor('assets/animations/Earth.flr',
+                        color: Colors.green,
+                        alignment: Alignment.center,
+                        fit: BoxFit.contain,
+                        animation: 'Stroke'),
                   ),
-                ),
-              ),
-            ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Rejected plastic bag!',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[800]),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text(
+                      'Thanks for making the world a better place!',
+                      style: TextStyle(fontSize: 18, color: Colors.grey[800]),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ]),
           ),
         ),
         onTap: () {
