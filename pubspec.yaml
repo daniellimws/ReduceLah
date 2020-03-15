@@ -31,6 +31,7 @@ dependencies:
   flutter_icons: ^1.0.0
   flutter_nfc_reader: ^0.1.0
   flare_flutter: ^1.5.5
+  esys_flutter_share: any
 
 dev_dependencies:
   flutter_test:
@@ -51,6 +52,7 @@ flutter:
   assets:
     - assets/animations/Earth.flr
     - assets/google-logo.png
+    - assets/icons/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

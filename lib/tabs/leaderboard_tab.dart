@@ -27,6 +27,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF6FBF5),
       appBar: AppBar(
         title: Text(
           'Leaderboard',
@@ -61,12 +62,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
           Divider(color: Colors.grey[400], indent: 24, endIndent: 24),
       itemBuilder: (context, index) {
         User user = _leaderboardData.users[index];
-        return me.id == user.id
-            ? _meCard()
-            : Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 2.0, horizontal: 0),
-                child: _listItem(user, false));
+        return me.id == user.id ? _meCard() : _listItem(user, false);
       },
     );
   }
@@ -77,7 +73,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
       child: Card(
           color: Colors.lightGreen,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            padding: const EdgeInsets.symmetric(vertical: 6.0),
             child: _listItem(me, true),
           )),
     );
@@ -108,7 +104,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
       leading: Wrap(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(6.0),
+            padding: const EdgeInsets.symmetric(horizontal: 6.0),
             child: Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: Text(user.rank.toString(),
