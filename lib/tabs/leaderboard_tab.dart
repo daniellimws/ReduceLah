@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:reducelah/services/leaderboard_service.dart';
 
-User me = User(id: 6, name: "Loser", points: 1, rank: 22);
+User me = User(id: "6", name: "Loser", points: 1, rank: 22);
 LeaderboardData _leaderboardData = LeaderboardData(users: [
-  User(id: 1, name: "Daniel Lim Wee Soong", points: 100, rank: 1),
-  User(id: 2, name: "Ang Jie Liang", points: 10, rank: 2),
-  User(id: 3, name: "Aaron Saw", points: 4, rank: 3),
-  User(id: 4, name: "Lee Hsien Loong", points: 3, rank: 4),
-  User(id: 5, name: "Salmon", points: 2, rank: 5)
+  User(id: '1', name: "Daniel Lim Wee Soong", points: 100, rank: 1),
+  User(id: '2', name: "Ang Jie Liang", points: 10, rank: 2),
+  User(id: '3', name: "Aaron Saw", points: 4, rank: 3),
+  User(id: '4', name: "Lee Hsien Loong", points: 3, rank: 4),
+  User(id: '5', name: "Salmon", points: 2, rank: 5)
 ], me: me);
 
 class LeaderboardTab extends StatefulWidget {

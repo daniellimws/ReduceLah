@@ -63,9 +63,11 @@ void createUser() async {
             'photoUrl': user.photoUrl
           }).then((_) => {
             leaderboardRef.setData({
+              'uid': user.uid,
               'straw': 0,
               'bag': 0,
               'container': 0,
+              'total': 0,
             })
           })
         }

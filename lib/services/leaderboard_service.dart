@@ -5,12 +5,24 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 final databaseReference = Firestore.instance;
 
 class User {
-  int id;
+  String id;
   String name;
   int points;
   int rank;
 
   User({this.id, this.name, this.points, this.rank});
+
+  User.fromMap(Map userSnapshot, Map leaderboardSnapshot):
+      id = userSnapshot['uid'] ?? '',
+      name = userSnapshot['displayName'] ?? '',
+      points = leaderboardSnapshot['total'] ?? 0,
+      rank = leaderboardSnapshot['rank'] ?? 100;
+
+  User.fromSnapshot(Map userSnapshot, Map leaderboardSnapshot, int rank):
+        id = userSnapshot['uid'] ?? '',
+        name = userSnapshot['displayName'] ?? '',
+        points = leaderboardSnapshot['total'] ?? 0,
+        rank = rank ?? 100;
 }
 
 class LeaderboardData {
@@ -20,6 +32,44 @@ class LeaderboardData {
   LeaderboardData({this.users, this.me});
 }
 
-void generateLeaderboard() async {
+Future<List<User>> generateLeaderboard() async {
+  Query leaderboardRef = databaseReference.collection('leaderboard').orderBy('total').limit(10);
+  CollectionReference userRef = databaseReference.collection('users');
 
+  QuerySnapshot leaderboardSnapshot = await databaseReference.collection('leaderboard').orderBy('total').getDocuments();
+  List<DocumentSnapshot> leaderboard = leaderboardSnapshot.documents;
+
+  final FirebaseUser user = await _auth.currentUser();
+
+  List<User> users = [];
+
+//  var futureList = Future.wait(
+//      leaderboard.map((DocumentSnapshot d) async {
+//
+//        DocumentSnapshot userSnapshot = await userRef.document(d.data['uid']).get();
+//        print(userSnapshot.data);
+//
+//        return new User.fromMap(userSnapshot.data, d.data);
+//      }).toList());
+
+
+  var futureList = Future.wait(
+      leaderboard.asMap().entries.map((entry) async {
+        int idx = entry.key;
+        DocumentSnapshot d = entry.value;
+        DocumentSnapshot userSnapshot = await userRef.document(d.data['uid']).get();
+        return new User.fromSnapshot(userSnapshot.data, d.data, idx);
+      }).toList());
+
+//  List<User> list = await futureList;
+//
+//  list = list.asMap().entries.map((entry) {
+//    int idx = entry.key;
+//    User user = entry.value;
+//    user.rank = idx;
+//    return user;
+//  });
+
+  return futureList;
 }
+
