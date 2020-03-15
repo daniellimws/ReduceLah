@@ -50,8 +50,8 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
           }
           return Column(
             children: <Widget>[
-              leaderboardSnap.data.users.where((u) => u.id == leaderboardSnap.data.me.id).length == 0
-                  ? Padding(
+              new List<User>.from(leaderboardSnap.data.users).where((u) => u.id == leaderboardSnap.data.me.id).length == 0
+                   ? Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: _meCard(leaderboardSnap.data.me),
               )
@@ -76,7 +76,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
           Divider(color: Colors.grey[400], indent: 24, endIndent: 24),
       itemBuilder: (context, index) {
         User user = _users[index];
-        return _me.id == user.id ? _meCard(_me) : _listItem(user, false, _me);
+        return _me.id == user.id ? _meCard(user) : _listItem(user, false, _me);
       },
     );
   }
@@ -172,7 +172,8 @@ Future<LeaderboardData> generateLeaderboard() async {
 
   DocumentSnapshot currLeaderboardSnapshot = await databaseReference.collection('leaderboard').document(user.uid).get();
   DocumentSnapshot currUserSnapshot = await userRef.document(user.uid).get();
-  User currUser = new User.fromSnapshot(currUserSnapshot.data, currLeaderboardSnapshot.data, 100);
+
+  User currUser = new User.fromSnapshot(currUserSnapshot.data, currLeaderboardSnapshot.data, -1);
 
   LeaderboardData ld = LeaderboardData(users: list, me: currUser);
 

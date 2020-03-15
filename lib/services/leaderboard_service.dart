@@ -33,16 +33,12 @@ class LeaderboardData {
 }
 
 Future<List<User>> generateLeaderboard() async {
-  Query leaderboardRef = databaseReference.collection('leaderboard').orderBy('total').limit(10);
   CollectionReference userRef = databaseReference.collection('users');
 
   QuerySnapshot leaderboardSnapshot = await databaseReference.collection('leaderboard').orderBy('total').getDocuments();
   List<DocumentSnapshot> leaderboard = leaderboardSnapshot.documents;
 
-  final FirebaseUser user = await _auth.currentUser();
-
-  List<User> users = [];
-
+//  final FirebaseUser user = await _auth.currentUser();
   var futureList = Future.wait(
       leaderboard.asMap().entries.map((entry) async {
         int idx = entry.key;
@@ -50,9 +46,6 @@ Future<List<User>> generateLeaderboard() async {
         DocumentSnapshot userSnapshot = await userRef.document(d.data['uid']).get();
         return new User.fromSnapshot(userSnapshot.data, d.data, idx);
       }).toList());
-
-  DocumentSnapshot currLeader = await databaseReference.collection('leaderboard').document(user.uid).get();
-  DocumentSnapshot currUser = await userRef.document(user.uid).get();
 
   return futureList;
 }
