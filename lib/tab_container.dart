@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
+import 'package:reducelah/tabs/achievements_tab.dart';
 
 import 'tabs/leaderboard_tab.dart';
 import 'tabs/empty_tab.dart';
@@ -26,6 +27,7 @@ class _TabContainerState extends State<TabContainer> {
     listScreens = [
       EmptyTab(),
       EmptyTab(),
+      AchievementsTab(),
       LeaderboardTab(),
     ];
   }
@@ -42,6 +44,7 @@ class _TabContainerState extends State<TabContainer> {
         body: listScreens[tabIndex],
         bottomNavigationBar: BottomNavigationBar(
             selectedItemColor: Theme.of(context).primaryColor,
+            unselectedItemColor: Colors.grey[600],
             currentIndex: tabIndex,
             onTap: (int index) {
               setState(() {
@@ -56,6 +59,10 @@ class _TabContainerState extends State<TabContainer> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.card_giftcard),
                 title: Text('Rewards'),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(FontAwesome.trophy),
+                title: Text('Achievements'),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.assessment),
