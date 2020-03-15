@@ -43,16 +43,6 @@ Future<List<User>> generateLeaderboard() async {
 
   List<User> users = [];
 
-//  var futureList = Future.wait(
-//      leaderboard.map((DocumentSnapshot d) async {
-//
-//        DocumentSnapshot userSnapshot = await userRef.document(d.data['uid']).get();
-//        print(userSnapshot.data);
-//
-//        return new User.fromMap(userSnapshot.data, d.data);
-//      }).toList());
-
-
   var futureList = Future.wait(
       leaderboard.asMap().entries.map((entry) async {
         int idx = entry.key;
@@ -61,14 +51,8 @@ Future<List<User>> generateLeaderboard() async {
         return new User.fromSnapshot(userSnapshot.data, d.data, idx);
       }).toList());
 
-//  List<User> list = await futureList;
-//
-//  list = list.asMap().entries.map((entry) {
-//    int idx = entry.key;
-//    User user = entry.value;
-//    user.rank = idx;
-//    return user;
-//  });
+  DocumentSnapshot currLeader = await databaseReference.collection('leaderboard').document(user.uid).get();
+  DocumentSnapshot currUser = await userRef.document(user.uid).get();
 
   return futureList;
 }

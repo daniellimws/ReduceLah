@@ -3,6 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:reducelah/services/leaderboard_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final databaseReference = Firestore.instance;
 
 User me = User(id: "6", name: "Loser", points: 1, rank: 22);
 LeaderboardData _leaderboardData = LeaderboardData(users: [
@@ -37,37 +42,46 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
-      body: Column(
-        children: <Widget>[
-          me.rank > _leaderboardData.users.length
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: _meCard(),
-                )
-              : Container(width: 0, height: 0),
-          Expanded(
-            child: Container(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: _leaderboardList()),
-          ),
-        ],
-      ),
+
+      body: FutureBuilder(
+        builder: (context, leaderboardSnap) {
+          if(!leaderboardSnap.hasData) {
+            return Container();
+          }
+          return Column(
+            children: <Widget>[
+              me.rank > leaderboardSnap.data.users.length
+                  ? Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: _meCard(leaderboardSnap.data.me),
+              )
+                  : Container(width: 0, height: 0),
+              Expanded(
+                child: Container(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: _leaderboardList(leaderboardSnap)),
+              ),
+            ],
+          );
+        },
+        future: generateLeaderboard(),
+      )
     );
   }
 
-  Widget _leaderboardList() {
+  Widget _leaderboardList(leaderboardSnap) {
     return ListView.separated(
-      itemCount: _leaderboardData.users.length,
+      itemCount: leaderboardSnap.data.users.length,
       separatorBuilder: (context, index) =>
           Divider(color: Colors.grey[400], indent: 24, endIndent: 24),
       itemBuilder: (context, index) {
-        User user = _leaderboardData.users[index];
-        return me.id == user.id ? _meCard() : _listItem(user, false);
+        User user = leaderboardSnap.data.users[index];
+        return leaderboardSnap.data.me.id == user.id ? _meCard(leaderboardSnap.data.me) : _listItem(user, false);
       },
     );
   }
 
-  Widget _meCard() {
+  Widget _meCard(me) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Card(
@@ -138,4 +152,35 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
       ),
     );
   }
+}
+
+Future<LeaderboardData> generateLeaderboard() async {
+  Query leaderboardRef = databaseReference.collection('leaderboard').orderBy('total');
+  CollectionReference userRef = databaseReference.collection('users');
+
+  QuerySnapshot leaderboardSnapshot = await databaseReference.collection('leaderboard').orderBy('total').limit(10).getDocuments();
+  List<DocumentSnapshot> leaderboard = leaderboardSnapshot.documents;
+
+  final FirebaseUser user = await _auth.currentUser();
+
+  var futureList = Future.wait(
+      leaderboard.asMap().entries.map((entry) async {
+        int idx = entry.key;
+        DocumentSnapshot d = entry.value;
+        DocumentSnapshot userSnapshot = await userRef.document(d.data['uid']).get();
+        return new User.fromSnapshot(userSnapshot.data, d.data, idx);
+      }).toList());
+
+  List<User> list = await futureList;
+
+  DocumentSnapshot currLeaderboardSnapshot = await databaseReference.collection('leaderboard').document(user.uid).get();
+  DocumentSnapshot currUserSnapshot = await userRef.document(user.uid).get();
+
+  User currUser = new User.fromSnapshot(currUserSnapshot.data, currLeaderboardSnapshot.data, 100);
+
+  LeaderboardData ld = LeaderboardData(users: list, me: currUser);
+
+  print(user.uid);
+
+  return ld;
 }
