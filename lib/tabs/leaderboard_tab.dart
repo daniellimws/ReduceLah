@@ -3,11 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:reducelah/services/leaderboard_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-final FirebaseAuth _auth = FirebaseAuth.instance;
-final databaseReference = Firestore.instance;
 
 User me = User(id: "6", name: "Loser", points: 1, rank: 22);
 LeaderboardData _leaderboardData = LeaderboardData(users: [
@@ -154,28 +149,4 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
   }
 }
 
-Future<LeaderboardData> generateLeaderboard() async {
-  CollectionReference userRef = databaseReference.collection('users');
-  QuerySnapshot leaderboardSnapshot = await databaseReference.collection('leaderboard').orderBy('total').limit(10).getDocuments();
-  List<DocumentSnapshot> leaderboard = leaderboardSnapshot.documents;
-  final FirebaseUser user = await _auth.currentUser();
 
-  var futureList = Future.wait(
-      leaderboard.asMap().entries.map((entry) async {
-        int idx = entry.key;
-        DocumentSnapshot d = entry.value;
-        DocumentSnapshot userSnapshot = await userRef.document(d.data['uid']).get();
-        return new User.fromSnapshot(userSnapshot.data, d.data, idx);
-      }).toList());
-
-  List<User> list = await futureList;
-
-  DocumentSnapshot currLeaderboardSnapshot = await databaseReference.collection('leaderboard').document(user.uid).get();
-  DocumentSnapshot currUserSnapshot = await userRef.document(user.uid).get();
-
-  User currUser = new User.fromSnapshot(currUserSnapshot.data, currLeaderboardSnapshot.data, -1);
-
-  LeaderboardData ld = LeaderboardData(users: list, me: currUser);
-
-  return ld;
-}
