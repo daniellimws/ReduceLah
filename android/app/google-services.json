@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "305396043356",
+    "firebase_url": "https://reducelah.firebaseio.com",
+    "project_id": "reducelah",
+    "storage_bucket": "reducelah.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:305396043356:android:292b9b5193a4b8a7ee2099",
+        "android_client_info": {
+          "package_name": "hawt.dats.reducelah"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "305396043356-lfgjajubqjf0s5703o1bv2qj1or7qcmt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hawt.dats.reducelah",
+            "certificate_hash": "96465829e0ad8c023a676560920a8fe8181fc223"
+          }
+        },
+        {
+          "client_id": "305396043356-tlmnp9gha2ep2n54ekg551vrna7fmqmn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSbCNspbK87soh1CJGuLoxkJgs1-dClU8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "305396043356-tlmnp9gha2ep2n54ekg551vrna7fmqmn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
