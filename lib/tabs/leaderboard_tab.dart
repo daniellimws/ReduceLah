@@ -50,7 +50,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
           }
           return Column(
             children: <Widget>[
-              me.rank > leaderboardSnap.data.users.length
+              leaderboardSnap.data.users.where((u) => u.id == leaderboardSnap.data.me.id).length == 0
                   ? Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: _meCard(leaderboardSnap.data.me),
@@ -59,7 +59,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
               Expanded(
                 child: Container(
                     padding: const EdgeInsets.only(top: 8.0),
-                    child: _leaderboardList(leaderboardSnap)),
+                    child: _leaderboardList(leaderboardSnap.data.users, leaderboardSnap.data.me)),
               ),
             ],
           );
@@ -69,31 +69,31 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
     );
   }
 
-  Widget _leaderboardList(leaderboardSnap) {
+  Widget _leaderboardList(_users, _me) {
     return ListView.separated(
-      itemCount: leaderboardSnap.data.users.length,
+      itemCount: _users.length,
       separatorBuilder: (context, index) =>
           Divider(color: Colors.grey[400], indent: 24, endIndent: 24),
       itemBuilder: (context, index) {
-        User user = leaderboardSnap.data.users[index];
-        return leaderboardSnap.data.me.id == user.id ? _meCard(leaderboardSnap.data.me) : _listItem(user, false);
+        User user = _users[index];
+        return _me.id == user.id ? _meCard(_me) : _listItem(user, false, _me);
       },
     );
   }
 
-  Widget _meCard(me) {
+  Widget _meCard(_me) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Card(
           color: Colors.lightGreen,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 6.0),
-            child: _listItem(me, true),
+            child: _listItem(_me, true, _me),
           )),
     );
   }
 
-  Widget _listItem(User user, bool topCard) {
+  Widget _listItem(User user, bool topCard, User _me) {
     return ListTile(
       title: Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,
@@ -106,7 +106,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
           Padding(
             padding: const EdgeInsets.only(top: 2.0),
             child: Text(
-              user.id == me.id ? "ME" : "",
+              user.id == _me.id ? "ME" : "",
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
@@ -155,12 +155,9 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
 }
 
 Future<LeaderboardData> generateLeaderboard() async {
-  Query leaderboardRef = databaseReference.collection('leaderboard').orderBy('total');
   CollectionReference userRef = databaseReference.collection('users');
-
   QuerySnapshot leaderboardSnapshot = await databaseReference.collection('leaderboard').orderBy('total').limit(10).getDocuments();
   List<DocumentSnapshot> leaderboard = leaderboardSnapshot.documents;
-
   final FirebaseUser user = await _auth.currentUser();
 
   var futureList = Future.wait(
@@ -175,12 +172,9 @@ Future<LeaderboardData> generateLeaderboard() async {
 
   DocumentSnapshot currLeaderboardSnapshot = await databaseReference.collection('leaderboard').document(user.uid).get();
   DocumentSnapshot currUserSnapshot = await userRef.document(user.uid).get();
-
   User currUser = new User.fromSnapshot(currUserSnapshot.data, currLeaderboardSnapshot.data, 100);
 
   LeaderboardData ld = LeaderboardData(users: list, me: currUser);
-
-  print(user.uid);
 
   return ld;
 }
