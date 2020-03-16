@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
 import 'package:reducelah/tabs/achievements_tab.dart';
+import 'package:reducelah/tabs/rewards_tab.dart';
 
 import 'tabs/leaderboard_tab.dart';
 import 'tabs/empty_tab.dart';
@@ -26,7 +27,7 @@ class _TabContainerState extends State<TabContainer> {
     super.initState();
     listScreens = [
       EmptyTab(),
-      EmptyTab(),
+      RewardsTab(),
       AchievementsTab(),
       LeaderboardTab(),
     ];
