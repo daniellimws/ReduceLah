@@ -13,16 +13,16 @@ enum ReduceType {
 class Points {
   String id;
   int total = 0;
-  int plastic = 0;
+  int bag = 0;
   int straw = 0;
   int container = 0;
 
-  Points({this.id, this.total, this.plastic, this.straw, this.container});
+  Points({this.id, this.total, this.bag, this.straw, this.container});
 
   Points.fromMap(Map map):
         id = map['uid'] ?? '',
         total = map['total'] ?? 0,
-        plastic = map['plastic'] ?? 0,
+        bag = map['bag'] ?? 0,
         straw = map['straw'] ?? 0,
         container = map['container'] ?? 0;
 }
@@ -30,6 +30,7 @@ class Points {
 Future<Points> getPoints() async {
   final FirebaseUser user = await _auth.currentUser();
   DocumentSnapshot pointsSnapshot = await databaseReference.collection('leaderboard').document(user.uid).get();
+  print(pointsSnapshot.data);
   return Points.fromMap(pointsSnapshot.data);
 }
 

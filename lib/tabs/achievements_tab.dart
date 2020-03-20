@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:reducelah/services/point_service.dart';
 
 class AchievementsTab extends StatefulWidget {
   @override
@@ -10,9 +11,14 @@ class AchievementsTab extends StatefulWidget {
 }
 
 class _AchievementsTabState extends State<AchievementsTab> {
+
+  Future<Points> _points;
+
   @override
   void initState() {
     super.initState();
+
+    _points = getPoints();
   }
 
   @override
@@ -28,14 +34,23 @@ class _AchievementsTabState extends State<AchievementsTab> {
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            _strawSection(),
-            _plasticBagSection(),
-            _foodContainerSection()
-          ],
-        ),
+      body: FutureBuilder(
+        builder: (context, pointsSnap) {
+          if(!pointsSnap.hasData) {
+            return Container();
+          }
+
+          return SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                _strawSection(pointsSnap.data.straw),
+                _plasticBagSection(pointsSnap.data.bag),
+                _foodContainerSection(pointsSnap.data.container)
+              ],
+            ),
+          );
+        },
+        future: _points,
       ),
     );
   }
@@ -58,7 +73,7 @@ class _AchievementsTabState extends State<AchievementsTab> {
     );
   }
 
-  Widget _strawSection() {
+  Widget _strawSection(int num) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 24, horizontal: 24),
       child: Column(
@@ -72,12 +87,12 @@ class _AchievementsTabState extends State<AchievementsTab> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                 textAlign: TextAlign.start,
               ),
-              Text("3/10",
+              Text(num.toString(),
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14))
             ],
           ),
           SizedBox(height: 12),
-          LinearProgressIndicator(value: 0.3),
+          LinearProgressIndicator(value: num/100.0),
           SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -92,7 +107,7 @@ class _AchievementsTabState extends State<AchievementsTab> {
     );
   }
 
-  Widget _plasticBagSection() {
+  Widget _plasticBagSection(int num) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 24, horizontal: 24),
       child: Column(
@@ -106,12 +121,12 @@ class _AchievementsTabState extends State<AchievementsTab> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                 textAlign: TextAlign.start,
               ),
-              Text("7/10",
+              Text(num.toString(),
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14))
             ],
           ),
           SizedBox(height: 12),
-          LinearProgressIndicator(value: 0.7),
+          LinearProgressIndicator(value: num / 100.0),
           SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -126,7 +141,7 @@ class _AchievementsTabState extends State<AchievementsTab> {
     );
   }
 
-  Widget _foodContainerSection() {
+  Widget _foodContainerSection(int num) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 24, horizontal: 24),
       child: Column(
@@ -140,12 +155,12 @@ class _AchievementsTabState extends State<AchievementsTab> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                 textAlign: TextAlign.start,
               ),
-              Text("16/20",
+              Text(num.toString(),
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14))
             ],
           ),
           SizedBox(height: 12),
-          LinearProgressIndicator(value: 0.8),
+          LinearProgressIndicator(value: num / 100.0),
           SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
