@@ -3,9 +3,8 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
 import 'package:reducelah/tabs/achievements_tab.dart';
 import 'package:reducelah/tabs/rewards_tab.dart';
-
+import 'package:reducelah/tabs/dashboard_tab.dart';
 import 'tabs/leaderboard_tab.dart';
-import 'tabs/empty_tab.dart';
 
 class TabContainer extends StatefulWidget {
   TabContainer({Key key}) : super(key: key);
@@ -17,12 +16,7 @@ class TabContainer extends StatefulWidget {
 class _TabContainerState extends State<TabContainer> {
   List<Widget> originalList;
   Map<int, bool> originalDic;
-  List<Widget> listScreens = [
-    EmptyTab(),
-    RewardsTab(),
-    AchievementsTab(),
-    LeaderboardTab(),
-  ];
+  List<Widget> listScreens;
   List<int> listScreensIndex;
 
   int tabIndex = 0;
@@ -30,6 +24,12 @@ class _TabContainerState extends State<TabContainer> {
   @override
   void initState() {
     super.initState();
+    listScreens = [
+      DashboardTab(),
+      RewardsTab(),
+      AchievementsTab(),
+      LeaderboardTab(),
+    ];
   }
 
   @override
@@ -41,10 +41,7 @@ class _TabContainerState extends State<TabContainer> {
     return MaterialApp(
       color: Colors.greenAccent,
       home: Scaffold(
-        body: IndexedStack(
-          index: tabIndex,
-          children: listScreens,
-        ),
+        body: listScreens[tabIndex],
         bottomNavigationBar: BottomNavigationBar(
             selectedItemColor: Theme.of(context).primaryColor,
             unselectedItemColor: Colors.grey[600],
