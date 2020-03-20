@@ -9,18 +9,14 @@ class User {
   String name;
   int points;
   int rank;
+  String photoUrl;
 
   User({this.id, this.name, this.points, this.rank});
-
-  User.fromMap(Map userSnapshot, Map leaderboardSnapshot):
-      id = userSnapshot['uid'] ?? '',
-      name = userSnapshot['displayName'] ?? '',
-      points = leaderboardSnapshot['total'] ?? 0,
-      rank = leaderboardSnapshot['rank'] ?? 100;
 
   User.fromSnapshot(Map userSnapshot, Map leaderboardSnapshot, int rank):
         id = userSnapshot['uid'] ?? '',
         name = userSnapshot['displayName'] ?? '',
+        photoUrl = userSnapshot['photoUrl'] ?? '',
         points = leaderboardSnapshot['total'] ?? 0,
         rank = rank ?? 100;
 }

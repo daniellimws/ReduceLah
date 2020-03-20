@@ -22,6 +22,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
   @override
   void initState() {
     super.initState();
+    print("init");
   }
 
   @override
@@ -123,8 +124,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
             ),
           ),
           CircleAvatar(
-              child: Text(user.name[0].toUpperCase(),
-                  style: TextStyle(color: Colors.white)),
+              backgroundImage: NetworkImage(user.photoUrl),
               backgroundColor:
                   Colors.primaries[Random().nextInt(Colors.primaries.length)]),
         ],
