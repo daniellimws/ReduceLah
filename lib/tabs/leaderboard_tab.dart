@@ -19,9 +19,18 @@ class LeaderboardTab extends StatefulWidget {
 }
 
 class _LeaderboardTabState extends State<LeaderboardTab> {
+  Future<LeaderboardData> _leaderboard;
+
   @override
   void initState() {
     super.initState();
+    _leaderboard = generateLeaderboard();
+  }
+
+  void refreshLeaderboard() {
+    setState(() {
+      _leaderboard = generateLeaderboard();
+    });
   }
 
   @override
@@ -59,7 +68,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
             ],
           );
         },
-        future: generateLeaderboard(),
+        future: _leaderboard,
       )
     );
   }
@@ -123,8 +132,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
             ),
           ),
           CircleAvatar(
-              child: Text(user.name[0].toUpperCase(),
-                  style: TextStyle(color: Colors.white)),
+              backgroundImage: NetworkImage(user.photoUrl),
               backgroundColor:
                   Colors.primaries[Random().nextInt(Colors.primaries.length)]),
         ],

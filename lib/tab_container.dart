@@ -5,9 +5,8 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 import 'package:reducelah/tabs/achievements_tab.dart';
 import 'package:reducelah/tabs/rewards_tab.dart';
-
+import 'package:reducelah/tabs/dashboard_tab.dart';
 import 'tabs/leaderboard_tab.dart';
-import 'tabs/empty_tab.dart';
 
 class TabContainer extends StatefulWidget {
   TabContainer({Key key}) : super(key: key);
@@ -28,7 +27,7 @@ class _TabContainerState extends State<TabContainer> {
   void initState() {
     super.initState();
     listScreens = [
-      EmptyTab(),
+      DashboardTab(),
       RewardsTab(),
       AchievementsTab(),
       LeaderboardTab(),
