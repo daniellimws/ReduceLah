@@ -30,7 +30,6 @@ class Points {
 Future<Points> getPoints() async {
   final FirebaseUser user = await _auth.currentUser();
   DocumentSnapshot pointsSnapshot = await databaseReference.collection('leaderboard').document(user.uid).get();
-  print(pointsSnapshot.data);
   return Points.fromMap(pointsSnapshot.data);
 }
 
