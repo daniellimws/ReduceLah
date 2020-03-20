@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 
 import 'nfc_detected_page.dart';
-import 'tab_container.dart';
-import 'login_page.dart';
+import 'package:reducelah/tab_container.dart';
+import 'package:reducelah/login_page.dart';
 
 void main() => runApp(ReduceLah());
 

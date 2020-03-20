@@ -18,7 +18,12 @@ class TabContainer extends StatefulWidget {
 class _TabContainerState extends State<TabContainer> {
   List<Widget> originalList;
   Map<int, bool> originalDic;
-  List<Widget> listScreens;
+  List<Widget> listScreens = [
+    DashboardTab(),
+    RewardsTab(),
+    AchievementsTab(),
+    LeaderboardTab(),
+  ];
   List<int> listScreensIndex;
 
   int tabIndex = 0;
@@ -26,13 +31,6 @@ class _TabContainerState extends State<TabContainer> {
   @override
   void initState() {
     super.initState();
-    listScreens = [
-      DashboardTab(),
-      RewardsTab(),
-      AchievementsTab(),
-      LeaderboardTab(),
-    ];
-
     _prepareNFCListener(context);
   }
 
@@ -60,7 +58,10 @@ class _TabContainerState extends State<TabContainer> {
     return MaterialApp(
       color: Colors.greenAccent,
       home: Scaffold(
-        body: listScreens[tabIndex],
+        body: IndexedStack(
+          index: tabIndex,
+          children: listScreens,
+        ),
         bottomNavigationBar: BottomNavigationBar(
             selectedItemColor: Theme.of(context).primaryColor,
             unselectedItemColor: Colors.grey[600],
