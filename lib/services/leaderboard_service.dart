@@ -14,7 +14,7 @@ class User {
   User({this.id, this.name, this.points, this.rank});
 
   User.fromSnapshot(Map userSnapshot, Map leaderboardSnapshot, int rank):
-        id = userSnapshot['uid'] ?? '',
+        id = leaderboardSnapshot['uid'] ?? '',
         name = userSnapshot['displayName'] ?? '',
         photoUrl = userSnapshot['photoUrl'] ?? '',
         points = leaderboardSnapshot['total'] ?? 0,
@@ -30,7 +30,7 @@ class LeaderboardData {
 
 Future<LeaderboardData> generateLeaderboard() async {
   CollectionReference userRef = databaseReference.collection('users');
-  QuerySnapshot leaderboardSnapshot = await databaseReference.collection('leaderboard').orderBy('total').limit(10).getDocuments();
+  QuerySnapshot leaderboardSnapshot = await databaseReference.collection('leaderboard').orderBy('total', descending: true).limit(10).getDocuments();
   List<DocumentSnapshot> leaderboard = leaderboardSnapshot.documents;
   final FirebaseUser user = await _auth.currentUser();
 
@@ -39,7 +39,7 @@ Future<LeaderboardData> generateLeaderboard() async {
         int idx = entry.key;
         DocumentSnapshot d = entry.value;
         DocumentSnapshot userSnapshot = await userRef.document(d.data['uid']).get();
-        return new User.fromSnapshot(userSnapshot.data, d.data, idx);
+        return new User.fromSnapshot(userSnapshot.data, d.data, idx + 1);
       }).toList());
 
   List<User> list = await futureList;
