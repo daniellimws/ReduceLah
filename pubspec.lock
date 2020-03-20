@@ -240,6 +240,22 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.8"
+  nfc_in_flutter:
+    dependency: "direct main"
+    description:
+      name: nfc_in_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.2"
+  nfc_io:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: "4cae1320d9ca5650c3ced689f84fea89d789e653"
+      url: "git@github.com:agent306/nfc_io.git"
+    source: git
+    version: "1.0.2+1"
   path:
     dependency: transitive
     description:

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "305396043356-qlofsvpreh2n6ubt6c5o4l8i4i3ui8c7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hawt.dats.reducelah",
+            "certificate_hash": "e6979520336fcb93e356664326376878e042c926"
+          }
+        },
+        {
           "client_id": "305396043356-lfgjajubqjf0s5703o1bv2qj1or7qcmt.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

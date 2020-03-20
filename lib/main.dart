@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 
 import 'nfc_detected_page.dart';
 import 'tab_container.dart';
@@ -14,7 +17,7 @@ class ReduceLah extends StatelessWidget {
         theme: ThemeData(primaryColor: Colors.green),
         initialRoute: "/login",
         routes: {
-          "/": (context) => TabContainer(),
+          "/main": (context) => TabContainer(),
           "/nfc": (context) => NFCDetectedPage(),
           "/login": (context) => LoginPage(),
         });

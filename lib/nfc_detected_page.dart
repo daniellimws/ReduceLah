@@ -28,6 +28,7 @@ class _NFCDetectedPageState extends State<NFCDetectedPage>
 
   @override
   Widget build(BuildContext context) {
+    final int arg = ModalRoute.of(context).settings.arguments;
     _fadeController.forward();
     return Scaffold(
       backgroundColor: Color(0xFFF4FAF3),
@@ -52,7 +53,13 @@ class _NFCDetectedPageState extends State<NFCDetectedPage>
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'Rejected plastic bag!',
+                      arg == 1
+                          ? 'Rejected plastic bag!'
+                          : arg == 2
+                              ? 'Rejected straw!'
+                              : arg == 3
+                                  ? 'Rejected container!'
+                                  : 'Rejected plastic waste!',
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,

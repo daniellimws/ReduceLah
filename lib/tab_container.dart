@@ -1,6 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
+import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 import 'package:reducelah/tabs/achievements_tab.dart';
 import 'package:reducelah/tabs/rewards_tab.dart';
 
@@ -31,14 +33,31 @@ class _TabContainerState extends State<TabContainer> {
       AchievementsTab(),
       LeaderboardTab(),
     ];
+
+    _prepareNFCListener(context);
+  }
+
+  void _prepareNFCListener(BuildContext context) {
+    NFC.readNDEF().first.then((NDEFMessage message) {
+      int type = int.parse(message.payload);
+      NFC
+          .writeNDEF(
+              NDEFMessage.withRecords([NDEFRecord.type("text/plain", "4")]))
+          .first;
+      print(type);
+      if (type >= 1 && type <= 3) {
+        Navigator.of(context).pushNamed("/nfc", arguments: type);
+        print("Clearing");
+      }
+
+      _prepareNFCListener(context);
+    }, onError: (e) {
+      _prepareNFCListener(context);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    FlutterNfcReader.onTagDiscovered().listen((onData) {
-      Navigator.of(context).pushNamed("/nfc");
-    });
-
     return MaterialApp(
       color: Colors.greenAccent,
       home: Scaffold(

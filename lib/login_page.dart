@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
       splashColor: Colors.grey,
       onPressed: () {
         signInWithGoogle().whenComplete(() {
-          Navigator.of(context).pushNamed("/");
+          Navigator.of(context).pushNamed("/main");
         });
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
