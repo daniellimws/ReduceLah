@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reducelah/services/point_service.dart';
 
 class Tier {
   final int _pointsNeeded;
@@ -121,9 +122,13 @@ class _RewardsTabState extends State<RewardsTab> {
   int historicalPoints = 578;
   Tier myTier = Tier.SILVER;
 
+  Future<Points> _points;
+
   @override
   void initState() {
     super.initState();
+
+    _points = getPoints();
   }
 
   @override
@@ -139,13 +144,21 @@ class _RewardsTabState extends State<RewardsTab> {
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(0),
-        children: <Widget>[
-            _tierAchieved(),
-            _pointsAccumulated(),
-            _rewards(),
-          ],
+      body: FutureBuilder(
+          builder: (context, pointsSnap) {
+            if (!pointsSnap.hasData) {
+              return Container();
+            }
+            return ListView(
+              padding: const EdgeInsets.all(0),
+              children: <Widget>[
+                _tierAchieved(),
+                _pointsAccumulated(pointsSnap.data.total),
+                _rewards(),
+              ],
+            );
+          },
+        future: _points,
       ),
     );
   }
@@ -200,7 +213,7 @@ class _RewardsTabState extends State<RewardsTab> {
 
   }
 
-  Widget _pointsAccumulated() {
+  Widget _pointsAccumulated(int points) {
     return Container(
       padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 2.0),
       color: Colors.white,
@@ -217,7 +230,7 @@ class _RewardsTabState extends State<RewardsTab> {
             flex: 3,
             child: Row(
               children: <Widget>[
-                Text('$myPoints',
+                Text(points.toString(),
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26, color: Colors.black),
                 ),
                 SizedBox(

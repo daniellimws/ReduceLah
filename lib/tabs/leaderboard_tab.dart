@@ -19,10 +19,18 @@ class LeaderboardTab extends StatefulWidget {
 }
 
 class _LeaderboardTabState extends State<LeaderboardTab> {
+  Future<LeaderboardData> _leaderboard;
+
   @override
   void initState() {
     super.initState();
-    print("init");
+    _leaderboard = generateLeaderboard();
+  }
+
+  void refreshLeaderboard() {
+    setState(() {
+      _leaderboard = generateLeaderboard();
+    });
   }
 
   @override
@@ -60,7 +68,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
             ],
           );
         },
-        future: generateLeaderboard(),
+        future: _leaderboard,
       )
     );
   }
