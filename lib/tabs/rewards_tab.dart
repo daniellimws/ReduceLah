@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reducelah/services/leaderboard_service.dart';
 import 'package:reducelah/services/point_service.dart';
 
 class Tier {
@@ -20,7 +21,9 @@ class Reward extends StatelessWidget {
   final String rewardPic;
   final int rewardPoints;
 
-  Reward({this.rewardName, this.rewardBrand, this.rewardPic, this.rewardPoints});
+  bool redeemed = false;
+
+  Reward({this.rewardName, this.rewardBrand, this.rewardPic, this.rewardPoints, this.redeemed});
 
   @override
   Widget build(BuildContext context) {
@@ -145,20 +148,28 @@ class _RewardsTabState extends State<RewardsTab> {
         backgroundColor: Colors.white,
       ),
       body: FutureBuilder(
-          builder: (context, pointsSnap) {
-            if (!pointsSnap.hasData) {
+          builder: (context, userSnap) {
+            if (!userSnap.hasData) {
               return Container();
             }
-            return ListView(
-              padding: const EdgeInsets.all(0),
-              children: <Widget>[
-                _tierAchieved(),
-                _pointsAccumulated(pointsSnap.data.total),
-                _rewards(),
-              ],
+            return StreamBuilder(
+              builder: (context, pointsSnap) {
+                if(!pointsSnap.hasData) {
+                  return Container();
+                }
+                return ListView(
+                  padding: const EdgeInsets.all(0),
+                  children: <Widget>[
+                    _tierAchieved(),
+                    _pointsAccumulated(pointsSnap.data.total),
+                    _rewards(pointsSnap.data.redeemed),
+                  ],
+                );
+              },
+              stream: getPointsStream(userSnap.data.id),
             );
           },
-        future: _points,
+        future: getMyDetails(),
       ),
     );
   }
@@ -261,7 +272,7 @@ class _RewardsTabState extends State<RewardsTab> {
     );
   }
 
-  Widget _rewards() {
+  Widget _rewards(var list) {
     return ListView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -274,6 +285,7 @@ class _RewardsTabState extends State<RewardsTab> {
             rewardBrand: listRewards[index]['brand'],
             rewardPic: listRewards[index]['pic'],
             rewardPoints: listRewards[index]['points'],
+            redeemed: new List<int>.from(list).where((l) => l == index).length > 0,
         );
       },
     );

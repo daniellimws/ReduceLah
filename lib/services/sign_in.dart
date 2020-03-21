@@ -80,6 +80,7 @@ void createUser() async {
               'bag': 0,
               'container': 0,
               'total': 0,
+              'redeemed': []
             })
           })
         }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:reducelah/services/leaderboard_service.dart';
 import 'package:reducelah/services/point_service.dart';
 
 @immutable
@@ -97,22 +98,29 @@ class _AchievementsTabState extends State<AchievementsTab> {
         backgroundColor: Colors.white,
       ),
       body: FutureBuilder(
-        builder: (context, pointsSnap) {
-          if (!pointsSnap.hasData) {
+        builder: (context, userSnap) {
+          if (!userSnap.hasData) {
             return Container();
           }
-
-          return SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                _strawSection(pointsSnap.data.straw),
-                _plasticBagSection(pointsSnap.data.bag),
-                _foodContainerSection(pointsSnap.data.container)
-              ],
-            ),
+          return StreamBuilder(
+            builder: (context, pointsSnap) {
+              if(!pointsSnap.hasData) {
+                return Container();
+              }
+              return SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    _strawSection(pointsSnap.data.straw),
+                    _plasticBagSection(pointsSnap.data.bag),
+                    _foodContainerSection(pointsSnap.data.container)
+                  ],
+                ),
+              );
+            },
+            stream: getPointsStream(userSnap.data.id),
           );
         },
-        future: _points,
+        future: getMyDetails(),
       ),
     );
   }

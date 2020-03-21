@@ -16,6 +16,7 @@ class Points {
   int bag = 0;
   int straw = 0;
   int container = 0;
+  var redeemed = [];
 
   Points({this.id, this.total, this.bag, this.straw, this.container});
 
@@ -31,7 +32,8 @@ class Points {
         total = map['total'] ?? 0,
         bag = map['bag'] ?? 0,
         straw = map['straw'] ?? 0,
-        container = map['container'] ?? 0;
+        container = map['container'] ?? 0,
+        redeemed = map['redeemed'] ?? [];
 }
 
 Future<Points> getPoints() async {
