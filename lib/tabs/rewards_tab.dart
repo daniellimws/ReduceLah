@@ -27,30 +27,6 @@ class Reward extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /*return Card(
-      child: Hero(
-        tag: rewardName,
-        child: Material(
-          child: InkWell(
-            onTap: (){},
-            child: ListTile(
-              contentPadding: EdgeInsets.all(0.0),
-              leading: Container(child: Image.asset(rewardPic, width: 120.0, fit: BoxFit.cover)),
-              title: Text(
-                rewardName,
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              subtitle: Text(
-                '$rewardBrand\n$rewardPoints points',
-                style: TextStyle(color: Colors.black, fontSize: 12),
-              ),
-              isThreeLine: true,
-              trailing: Image.asset('assets/icons/medal.png'),
-            ),
-          ),
-        ),
-      ),
-    );*/
     return Card(
       child: Hero(
         tag: rewardName,
