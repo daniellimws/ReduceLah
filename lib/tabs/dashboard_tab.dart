@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 const UserName = "Aaron";
 
@@ -13,8 +11,6 @@ class _DashboardTabState extends State<DashboardTab> {
   int straw = 0;
   int plasticBag = 0;
   int foodContainer = 0;
-  InAppWebViewController webView;
-  String url = "https://www.theworldcounts.com/embed/challenges/105?background_color=white&color=black&font_family=%22Helvetica+Neue%22%2C+Arial%2C+sans-serif&font_size=14";
 
   @override
   void initState() {
@@ -153,25 +149,6 @@ class _DashboardTabState extends State<DashboardTab> {
                       ),
                     ),
                   ],
-                ),
-              ),
-            ),
-            SizedBox(height: 8.0),
-            Expanded(
-              flex: 3,
-              child: Container(
-                color: Color(0xFF483f16),
-                child: InAppWebView(
-                  initialFile: "assets/plastic-count.html",
-                  initialHeaders: {},
-                  initialOptions: InAppWebViewWidgetOptions(
-                      inAppWebViewOptions: InAppWebViewOptions(
-                      debuggingEnabled: true,
-                    ),
-                  ),
-                  onWebViewCreated: (InAppWebViewController controller) {
-                    webView = controller;
-                  },
                 ),
               ),
             ),
