@@ -25,6 +25,13 @@ class Points {
         bag = map['bag'] ?? 0,
         straw = map['straw'] ?? 0,
         container = map['container'] ?? 0;
+
+  Points.fromAllMap(Map map):
+        id = map['uid'] ?? '',
+        total = map['total'] ?? 0,
+        bag = map['bag'] ?? 0,
+        straw = map['straw'] ?? 0,
+        container = map['container'] ?? 0;
 }
 
 Future<Points> getPoints() async {
@@ -41,4 +48,11 @@ void addPoint(ReduceType type) async {
     'total': FieldValue.increment(1),
   });
 }
+
+Stream<Points> getPointsStream(String uid) {
+  return databaseReference.collection('total').document(uid).snapshots().map((DocumentSnapshot snapshot) {
+      return new Points.fromAllMap(snapshot.data);
+  });
+}
+
 

@@ -19,6 +19,13 @@ class User {
         photoUrl = userSnapshot['photoUrl'] ?? '',
         points = leaderboardSnapshot['total'] ?? 0,
         rank = rank ?? 100;
+
+  User.fromAllSnapshot(Map snapshot, int rank):
+        id = snapshot['uid'] ?? '',
+        name = snapshot['displayName'] ?? '',
+        photoUrl = snapshot['photoUrl'] ?? '',
+        points = snapshot['total'] ?? 0,
+        rank = rank ?? 100;
 }
 
 class LeaderboardData {
@@ -54,17 +61,28 @@ Future<LeaderboardData> generateLeaderboard() async {
   return ld;
 }
 
-Stream<LeaderboardData> getLeaderboardStream(){
-  CollectionReference userRef = databaseReference.collection('users');
-  Stream<QuerySnapshot> stream = databaseReference.collection('leaderboard').orderBy('total', descending: true).limit(10).snapshots();
-  
-  Stream<LeaderboardData> s = stream.map((QuerySnapshot leaderboardSnapshot){
-      List<DocumentSnapshot> leaderboard = leaderboardSnapshot.documents;
-      return LeaderboardData();
+Stream<List<User>> getLeaderboardStream(){
+  return databaseReference.collection('total').orderBy('total', descending: true).limit(10).snapshots().map((QuerySnapshot snapshot) {
 
+    Map<int, DocumentSnapshot> sMap = snapshot.documents.asMap();
+
+    List<User> list = sMap.entries.map((entry) {
+      int idx = entry.key;
+      DocumentSnapshot d = entry.value;
+
+      User u = new User.fromAllSnapshot(d.data, idx + 1);
+      return u;
+    }).toList();
+
+    return list;
   });
 
-  return s;
+}
+
+Future<User> getMyDetails() async {
+  final FirebaseUser user = await _auth.currentUser();
+  DocumentSnapshot snapshot = await databaseReference.collection('total').document(user.uid).get();
+  return new User.fromAllSnapshot(snapshot.data, -1);
 }
 
 

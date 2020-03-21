@@ -20,30 +20,14 @@ class LeaderboardTab extends StatefulWidget {
 }
 
 class _LeaderboardTabState extends State<LeaderboardTab> {
-  Future<LeaderboardData> _leaderboard;
-  String uid;
 
   @override
   void initState() {
     super.initState();
-
-    getUid().then((String uid) {
-      setState(() {
-        this.uid = uid;
-      });
-    });
-    _leaderboard = generateLeaderboard();
-  }
-
-  void refreshLeaderboard() {
-    setState(() {
-      _leaderboard = generateLeaderboard();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    print(uid);
     return Scaffold(
       backgroundColor: Color(0xFFF6FBF5),
       appBar: AppBar(
@@ -57,27 +41,36 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
       ),
 
       body: FutureBuilder(
-        builder: (context, leaderboardSnap) {
-          if(!leaderboardSnap.hasData) {
+        builder: (context, meSnap) {
+          if(!meSnap.hasData) {
             return Container();
           }
-          return Column(
-            children: <Widget>[
-              new List<User>.from(leaderboardSnap.data.users).where((u) => u.id == leaderboardSnap.data.me.id).length == 0
-                   ? Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: _meCard(leaderboardSnap.data.me),
-              )
-                  : Container(width: 0, height: 0),
-              Expanded(
-                child: Container(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: _leaderboardList(leaderboardSnap.data.users, leaderboardSnap.data.me)),
-              ),
-            ],
+          return StreamBuilder(
+            builder: (context, leaderboardSnap) {
+              if(!leaderboardSnap.hasData) {
+                return Container();
+              }
+              List<User> meList = new List<User>.from(leaderboardSnap.data).where((u) => u.id == meSnap.data.id).toList();
+              return Column(
+                children: <Widget>[
+                  meList.length == 0
+                      ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: _meCard(meSnap.data),
+                  )
+                      : Container(width: 0, height: 0),
+                  Expanded(
+                    child: Container(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: _leaderboardList(leaderboardSnap.data, meList[0])),
+                  ),
+                ],
+              );
+            },
+            stream: getLeaderboardStream(),
           );
         },
-        future: _leaderboard,
+        future: getMyDetails(),
       )
     );
   }
@@ -134,7 +127,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
             padding: const EdgeInsets.symmetric(horizontal: 6.0),
             child: Padding(
               padding: const EdgeInsets.only(right: 8.0),
-              child: Text(user.rank.toString(),
+              child: Text(user.rank == -1 ? '-' : user.rank.toString(),
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: topCard ? Colors.grey[900] : Colors.grey[600])),
