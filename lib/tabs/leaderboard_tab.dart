@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:reducelah/services/leaderboard_service.dart';
+import 'package:reducelah/services/sign_in.dart';
 
 User me = User(id: "6", name: "Loser", points: 1, rank: 22);
 LeaderboardData _leaderboardData = LeaderboardData(users: [
@@ -20,10 +21,17 @@ class LeaderboardTab extends StatefulWidget {
 
 class _LeaderboardTabState extends State<LeaderboardTab> {
   Future<LeaderboardData> _leaderboard;
+  String uid;
 
   @override
   void initState() {
     super.initState();
+
+    getUid().then((String uid) {
+      setState(() {
+        this.uid = uid;
+      });
+    });
     _leaderboard = generateLeaderboard();
   }
 
@@ -35,6 +43,7 @@ class _LeaderboardTabState extends State<LeaderboardTab> {
 
   @override
   Widget build(BuildContext context) {
+    print(uid);
     return Scaffold(
       backgroundColor: Color(0xFFF6FBF5),
       appBar: AppBar(

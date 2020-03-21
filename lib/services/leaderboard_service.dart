@@ -54,3 +54,17 @@ Future<LeaderboardData> generateLeaderboard() async {
   return ld;
 }
 
+Stream<LeaderboardData> getLeaderboardStream(){
+  CollectionReference userRef = databaseReference.collection('users');
+  Stream<QuerySnapshot> stream = databaseReference.collection('leaderboard').orderBy('total', descending: true).limit(10).snapshots();
+  
+  Stream<LeaderboardData> s = stream.map((QuerySnapshot leaderboardSnapshot){
+      List<DocumentSnapshot> leaderboard = leaderboardSnapshot.documents;
+      return LeaderboardData();
+
+  });
+
+  return s;
+}
+
+

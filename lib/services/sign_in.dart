@@ -47,6 +47,7 @@ void createUser() async {
   
   DocumentReference userRef = databaseReference.collection('users').document(user.uid);
   DocumentReference leaderboardRef = databaseReference.collection('leaderboard').document(user.uid);
+  DocumentReference totalRef = databaseReference.collection('total').document(user.uid);
 
   userRef.get()
       .then((docSnapshot) => {
@@ -69,7 +70,23 @@ void createUser() async {
               'container': 0,
               'total': 0,
             })
+          }).then((_) => {
+            totalRef.setData({
+              'displayName': user.displayName,
+              'email': user.email,
+              'photoUrl': user.photoUrl,
+              'uid': user.uid,
+              'straw': 0,
+              'bag': 0,
+              'container': 0,
+              'total': 0,
+            })
           })
         }
       });
+}
+
+Future<String> getUid() async {
+  final FirebaseUser user = await _auth.currentUser();
+  return user.uid;
 }
