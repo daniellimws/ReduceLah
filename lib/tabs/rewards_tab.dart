@@ -202,19 +202,17 @@ class _RewardsTabState extends State<RewardsTab> {
 
   Widget _pointsAccumulated(int points) {
     return Container(
-      padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 2.0),
+      padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
       color: Colors.white,
-      constraints: BoxConstraints.expand(height: 140),
+      constraints: BoxConstraints.expand(height: 90),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Expanded(
-            flex: 2,
+          Container(
             child: Text("You have"),
           ),
-          Expanded(
-            flex: 3,
+          Container(
             child: Row(
               children: <Widget>[
                 Text(points.toString(),
@@ -229,20 +227,6 @@ class _RewardsTabState extends State<RewardsTab> {
               ],
             ),
           ),
-          Expanded(
-            flex: 6,
-            child: ButtonBar(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                RaisedButton(
-                  child: Text('View points history'),
-                ),
-                RaisedButton(
-                  child: Text('How do I earn more points?'),
-                )
-              ],
-            ),
-          )
         ],
       ),
     );

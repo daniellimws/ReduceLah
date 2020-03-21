@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:reducelah/services/leaderboard_service.dart';
 import 'package:reducelah/services/point_service.dart';
 
@@ -69,6 +70,102 @@ class _HexagonClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
+class AchievementBadge extends StatefulWidget {
+  final AssetImage achievementImage;
+  final bool obtained;
+  final String text;
+  AchievementBadge({this.achievementImage, this.obtained, this.text});
+
+  @override
+  _AchievementBadgeState createState() => _AchievementBadgeState(
+      achievementImage: this.achievementImage,
+      obtained: this.obtained,
+      text: this.text);
+}
+
+class _AchievementBadgeState extends State<AchievementBadge> {
+  bool _showImage;
+  AssetImage achievementImage;
+  bool obtained;
+  String text;
+
+  _AchievementBadgeState(
+      {@required this.achievementImage,
+      @required this.obtained,
+      @required this.text});
+
+  @override
+  void initState() {
+    super.initState();
+
+    _showImage = true;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          child: Container(
+            child: ClipShadowPath(
+                clipper: _HexagonClipper(),
+                shadow: BoxShadow(
+                    blurRadius: 0,
+                    offset: Offset(0, 2),
+                    color: obtained ? Color(0xFFf57b51) : Colors.grey[400]),
+                child: Padding(
+                  padding: const EdgeInsets.all(18),
+                  child: _showImage
+                      ? Image(image: achievementImage, width: 54)
+                      : SizedBox(
+                          height: 54,
+                          width: 54,
+                          child: Center(
+                            child: Text(
+                              "${text}",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontFamily: "Open Sans",
+                                  color: Colors.grey[900],
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          )),
+                )),
+          ),
+          onTap: () {
+            print("Tapped");
+            setState(() {
+              _showImage = !_showImage;
+            });
+            ;
+          },
+        ),
+        obtained
+            ? Positioned(
+                top: -8,
+                right: -10,
+                child: IconButton(
+                  iconSize: 12,
+                  color: Color(0xff30475e),
+                  icon: Icon(Icons.share),
+                  onPressed: () async {
+                    ByteData imageBytes =
+                        await rootBundle.load(achievementImage.assetName);
+                    await Share.file('ReduceLah Achievement', 'achievement.png',
+                        imageBytes.buffer.asUint8List(), 'image/png',
+                        text:
+                            'I\'ve unlocked the achievement "Rejected 10 straws" on ReduceLah!');
+                  },
+                ),
+              )
+            : SizedBox()
+      ],
+    );
+  }
+}
+
 class AchievementsTab extends StatefulWidget {
   @override
   _AchievementsTabState createState() => _AchievementsTabState();
@@ -104,7 +201,7 @@ class _AchievementsTabState extends State<AchievementsTab> {
           }
           return StreamBuilder(
             builder: (context, pointsSnap) {
-              if(!pointsSnap.hasData) {
+              if (!pointsSnap.hasData) {
                 return Container();
               }
               return SingleChildScrollView(
@@ -122,28 +219,6 @@ class _AchievementsTabState extends State<AchievementsTab> {
         },
         future: getMyDetails(),
       ),
-    );
-  }
-
-  Widget _achievementCard(AssetImage achievementImage, bool obtained) {
-    return GestureDetector(
-      child: ClipShadowPath(
-          clipper: _HexagonClipper(),
-          shadow: BoxShadow(
-              blurRadius: 0,
-              offset: Offset(0, 2),
-              color: obtained ? Colors.grey[200] : Colors.grey[900]),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Image(image: achievementImage, width: 65),
-          )),
-      onTap: () async {
-        ByteData imageBytes = await rootBundle.load(achievementImage.assetName);
-        await Share.file('ReduceLah Achievement', 'achievement.png',
-            imageBytes.buffer.asUint8List(), 'image/png',
-            text:
-                'I\'ve unlocked the achievement "Rejected 10 straws" on ReduceLah!');
-      },
     );
   }
 
@@ -184,9 +259,18 @@ class _AchievementsTabState extends State<AchievementsTab> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                _achievementCard(AssetImage('assets/icons/prize.png'), true),
-                _achievementCard(AssetImage('assets/icons/prize.png'), false),
-                _achievementCard(AssetImage('assets/icons/prize.png'), false)
+                AchievementBadge(
+                    achievementImage: AssetImage('assets/icons/prize.png'),
+                    obtained: true,
+                    text: "Rejected 100 straws"),
+                AchievementBadge(
+                    achievementImage: AssetImage('assets/icons/prize.png'),
+                    obtained: false,
+                    text: "Rejected 200 straws"),
+                AchievementBadge(
+                    achievementImage: AssetImage('assets/icons/prize.png'),
+                    obtained: false,
+                    text: "Rejected 300 straws")
               ],
             ),
             SizedBox(height: 12),
@@ -232,9 +316,21 @@ class _AchievementsTabState extends State<AchievementsTab> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                _achievementCard(AssetImage('assets/icons/prize.png'), true),
-                _achievementCard(AssetImage('assets/icons/prize.png'), true),
-                _achievementCard(AssetImage('assets/icons/prize.png'), false)
+                AchievementBadge(
+                  achievementImage: AssetImage('assets/icons/prize.png'),
+                  obtained: true,
+                  text: "Rejected 100 bags",
+                ),
+                AchievementBadge(
+                  achievementImage: AssetImage('assets/icons/prize.png'),
+                  obtained: true,
+                  text: "Rejected 200 bags",
+                ),
+                AchievementBadge(
+                  achievementImage: AssetImage('assets/icons/prize.png'),
+                  obtained: false,
+                  text: "Rejected 300 bags",
+                )
               ],
             ),
             SizedBox(height: 12),
@@ -280,9 +376,21 @@ class _AchievementsTabState extends State<AchievementsTab> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                _achievementCard(AssetImage('assets/icons/prize.png'), false),
-                _achievementCard(AssetImage('assets/icons/prize.png'), false),
-                _achievementCard(AssetImage('assets/icons/prize.png'), false)
+                AchievementBadge(
+                  achievementImage: AssetImage('assets/icons/prize.png'),
+                  obtained: false,
+                  text: "Rejected 100 containers",
+                ),
+                AchievementBadge(
+                  achievementImage: AssetImage('assets/icons/prize.png'),
+                  obtained: false,
+                  text: "Rejected 200 containers",
+                ),
+                AchievementBadge(
+                  achievementImage: AssetImage('assets/icons/prize.png'),
+                  obtained: false,
+                  text: "Rejected 300 containers",
+                )
               ],
             ),
             SizedBox(height: 12),
