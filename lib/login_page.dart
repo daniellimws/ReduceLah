@@ -18,9 +18,8 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text('ReduceLah!',
-                style: TextStyle(fontSize: 25.0),),
-              SizedBox(height: 50),
+              Image(image: AssetImage("assets/icons/reducelah.png"), height: 100.0),
+              SizedBox(height: 30),
               _signInButton(),
             ],
           )
